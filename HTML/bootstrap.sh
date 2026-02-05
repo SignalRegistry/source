@@ -17,13 +17,19 @@ if [ "$1" == "dependencies" ]; then
 
   LOG_SUBSECTION "Python "
   COMMAND="python"
-  if ! command -v $COMMAND >/dev/null 2>&1
+  COMMAND_ALTERNATIVE="python3"
+  if command -v $COMMAND >/dev/null 2>&1
   then
+    echo "- '$COMMAND' found at `command -v $COMMAND`"
+  elif command -v $COMMAND_ALTERNATIVE >/dev/null 2>&1
+  then
+    alias $COMMAD='$COMMAND_ALTERNATIVE'
+    echo "- '$COMMAND' found at `command -v $COMMAND`"
+  else
     echo "[ERROR] '$COMMAND' could not be found"
     exit 1
-  else
-    echo "- '$COMMAND' found at `command -v $COMMAND`"
   fi
+
   ver=$(python -c"import sys; print(sys.version_info.major)")
   if [ $ver -ne 3 ]; then
       echo "[ERROR] 'python' major version is not '3'"
